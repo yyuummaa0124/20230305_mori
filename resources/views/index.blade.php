@@ -1,12 +1,17 @@
+
 @extends('layouts.default')
-@php
-  dd($form);
-@endphp
+@if (Auth::check())
+  <p>ログイン中ユーザー: {{$user->name . ' メール' . $user->email . ''}}</p>
+@else
+  <p>ログインしてください。（<a href="/login">ログイン</a>
+  <a href="/register">登録</a>）</p>
+@endif
 
 <p class="title">Todo List</p>
 <form action="/todo/create" method="POST">
   @csrf
 <input type="text" name="content">
+@foreach ($todos as $todo)
 <select name="select" value="" name="tag">
   <option value="">家事</option>
   <option value="">勉強</option>
@@ -14,6 +19,7 @@
   <option value="">食事</option>
   <option value="">移動</option>
 <input type="submit" value="追加">
+@endforeach
 </form>
 <table>
   <tr>
@@ -34,7 +40,8 @@
     <option value="">{{$tag->tag}}</option>
     <option value="">{{$todo->tag->tag}}</option>
     <option value="">{{$todo->tag->tag}}</option>
-    </select></td>@endforeach
+    </select></td>
+    @endforeach
     <td><input name="" type="submit" value="更新"></td>
     <td><input name="" type="submit" value="削除"></td>
   </tr>

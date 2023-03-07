@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TodoRequest;
 use Illuminate\Http\Request;
@@ -12,18 +13,18 @@ use App\Models\Tag;
 class TodoController extends Controller
 {
     public function index(){
-
+        $user = Auth::user();
         $todos = Todo::all();
         $tags = Tag::all();
-        $param = ['todos' => $todos ,'tags' => $tags];
-        return view('index',$param);
+        $param = ['user' =>$user, 'todos' => $todos, 'tags' => $tags];
+        return view('index', $param);
     }
 
     public function create(TodoRequest $request){
 
-        $form = $request->all();
-        unset($form['_token']);
-        Todo::create($form);
+        $form = new Post($request->get('tag', []));
+        $form->todos()->create($request->get('todos', []));
+
         return redirect('/todo');
     }
 
